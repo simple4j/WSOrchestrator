@@ -1,0 +1,16 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/system1/api1.json.*"
+        /* "url": "/system1/cacheclear/entry.json?key=1&type=AA&refresh=true" */
+    },
+    "response": {
+        "status": 200,
+/*		"bodyFileName": "wiremock1/mappings/api1body.json.txt", */
+		"bodyFileName": "api1body.json",
+	    "headers": {
+	        "Content-Type": "text/plain"
+	    },
+		"transformers": ["response-template"]
+    }
+}

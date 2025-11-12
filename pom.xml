@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.simple4j</groupId>
+	<artifactId>WSOrchestrator</artifactId>
+	<version>25.06.30.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>WSOrchestrator</name>
+	<url>https://github.com/simple4j/WSOrchestrator</url>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Srinivas Janakiraman</name>
+			<email>jsrinivas@simple4j.org</email>
+			<organization>Simple4j</organization>
+			<organizationUrl>https://github.com/simple4j</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:https://github.com/simple4j/WSOrchestrator.git</connection>
+		<developerConnection>scm:git:https://github.com/simple4j/WSOrchestrator.git</developerConnection>
+		<url>https://github.com/simple4j/WSOrchestrator</url>
+	  <tag>HEAD</tag>
+	</scm>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.simple4j</groupId>
+			<artifactId>WSClient</artifactId>
+			<version>25.06.30.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>6.1.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.16</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache-extras.beanshell</groupId>
+			<artifactId>bsh</artifactId>
+			<version>2.0b6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.13.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mvel</groupId>
+			<artifactId>mvel2</artifactId>
+			<version>2.5.2.Final</version>
+		</dependency>
+
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.wiremock</groupId>
+		    <artifactId>wiremock</artifactId>
+		    <version>3.9.1</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>6.1.13</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<!-- Runtime dependencies -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.5.8</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>2.0.16</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>2.0.16</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>2.0.16</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.33</version>
+			<scope>runtime</scope>
+		</dependency>
+
+	</dependencies>
+	<profiles>
+		<profile>
+			<id>release-profile</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.2.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.9.1</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<build>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<excludes>
+					<exclude>**/*.jks</exclude>
+					<exclude>**/*.cer</exclude>
+					<exclude>**/*.csr</exclude>
+				</excludes>
+				<filtering>true</filtering>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>**/*.jks</include>
+					<include>**/*.cer</include>
+					<include>**/*.csr</include>
+				</includes>
+				<filtering>false</filtering>
+			</testResource>
+		</testResources>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+				  <dependencies>
+					<!-- reference https://stackoverflow.com/questions/70153962/nexus-staging-maven-plugin-maven-deploy-failed-an-api-incompatibility-was-enco -->
+				    <dependency>
+				      <groupId>com.thoughtworks.xstream</groupId>
+				      <artifactId>xstream</artifactId>
+				      <version>1.4.15</version>
+				    </dependency>
+				  </dependencies>				
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.3</version>
+			</plugin>
+		</plugins>
+	</build>
+	<description>
+	This is a simple orchestrator for  Web Service API calls.
+	
+	It supports hierarchy of flows and steps with wiring of request response objects using templated variable replacement.
+	Peer steps in a flow are executed in sequence and the peer flows are executed in parallel across multiple threads.
+	
+	A flow can have series of steps and sub-flows. They are executed in the natural ordering of their names.
+	Based on natural ordering,
+		if there are sequence of steps,
+		followed by sequence of sub-flows,
+		followed by another set of steps,
+			then the first set of steps will be executed in sequence,
+			then the sub-flows will be executed in parallel,
+			then wait for all the sub-flows to finish
+			and execute the second set of steps in sequence.
+	</description>
+	<properties>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+	</properties>
+</project>

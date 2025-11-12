@@ -1,0 +1,1 @@
+{"STATUS":"SUCCESS","param1":"{{request.query.param1}}"}

@@ -32,6 +32,7 @@ public class MainTest
 	static WireMockServer wm1 = null;
 	static File flowsDir = null;
 	static ApplicationContext ac = null;
+	static Orchestrator orch = null;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
@@ -40,6 +41,7 @@ public class MainTest
 		wm1.start();
 		flowsDir = new File(MainTest.class.getResource("/flowsDir").getPath());
 		ac = new ClassPathXmlApplicationContext("/connectors/wiremock/appContext.xml");
+		orch = new Orchestrator(flowsDir, ac);
 	}
 
 	@AfterClass
@@ -68,9 +70,17 @@ public class MainTest
 	@Test
 	public void testSimpleFlow()
 	{
-		Orchestrator orch = new Orchestrator(flowsDir, ac);
 		FlowDO response = orch.execute("simpleFlow");
-		System.out.println("testSimpleFlow response:"+ response);
+//		System.out.println("testSimpleFlow response:"+ response);
+		System.out.println("./010-step-ws/callerId="+response.getVariableValue("./010-step-ws/callerId"));
+//		Assert.assertTrue("Failed testcases are :" + tcPaths, success);
+	}
+
+	@Test
+	public void testSubLevelFlow()
+	{
+		FlowDO response = orch.execute("sublevelFlow");
+//		System.out.println("testSubLevelFlow response:"+ response);
 		System.out.println("./010-step-ws/callerId="+response.getVariableValue("./010-step-ws/callerId"));
 //		Assert.assertTrue("Failed testcases are :" + tcPaths, success);
 	}

@@ -96,18 +96,20 @@ public class StepDO extends ValueRetriever
 	        }
 	        if(assertExpression != null)
 	        {
-	            Object stepResult;
+	            Object assertExpressionResult;
 				try
 				{
-					stepResult = MVEL.eval(assertExpression, this.variables);
+					logger.info("assertExpression : {}", assertExpression);
+					assertExpressionResult = MVEL.eval(assertExpression, this.variables);
+					logger.info("assertExpressionResult : {}", assertExpressionResult);
 				} catch (Throwable e)
 	    		{
 					logger.error("Error while evaluating ASSERT: {} in step: {}", assertExpression, this.name, e);
 		            throw new RuntimeException(e);
 				}
-	            if(stepResult instanceof Boolean)
+	            if(assertExpressionResult instanceof Boolean)
 	            {
-	                if(!((Boolean)stepResult))
+	                if(!((Boolean)assertExpressionResult))
 	                {
 	                    logger.info("FAILURE: step "+ this.name +" for assertion "+assertExpression);
 	                    logger.info("Step variables are "+outputProperties);
@@ -116,8 +118,8 @@ public class StepDO extends ValueRetriever
 	            }
 	            else
 	            {
-	                logger.info("FAILURE: Assertion expression "+assertExpression+" return non-boolean value "+ stepResult + " of type "+stepResult.getClass());
-	                throw new RuntimeException("FAILURE: Assertion expression "+assertExpression+" return non-boolean value "+ stepResult + " of type "+stepResult.getClass());
+	                logger.info("FAILURE: Assertion expression "+assertExpression+" return non-boolean value "+ assertExpressionResult + " of type "+assertExpressionResult.getClass());
+	                throw new RuntimeException("FAILURE: Assertion expression "+assertExpression+" return non-boolean value "+ assertExpressionResult + " of type "+assertExpressionResult.getClass());
 	            }
 	        }
 		}
@@ -130,7 +132,8 @@ public class StepDO extends ValueRetriever
 		builder.append(super.toString());
 //		if(this.parent == null)
 //			builder.append(" [executionDO=").append(executionDO);
-		builder.append("[inputFile=").append(inputFile).append(", outputFile=").append(outputFile).append(", name=")
+		builder.append("[inputFile=").append(inputFile)
+		.append(", outputFile=").append(outputFile).append(", name=")
 		.append(name).append(", shortName=").append(shortName).append(", variables=").append(variables)
 		.append("]");
 		return builder.toString();

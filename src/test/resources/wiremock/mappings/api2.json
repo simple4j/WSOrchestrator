@@ -1,0 +1,14 @@
+{
+    "request": {
+        "method": "POST",
+        "urlPattern": "/system1/api2.json"
+    },
+    "response": {
+        "status": 200,
+		"bodyFileName": "api2body.json",
+	    "headers": {
+	        "Content-Type": "text/plain"
+	    },
+		"transformers": ["response-template"]
+    }
+}

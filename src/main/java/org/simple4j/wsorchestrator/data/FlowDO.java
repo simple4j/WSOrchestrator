@@ -55,7 +55,8 @@ public class FlowDO extends ValueRetriever
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(super.toString()).append(" [");
-		builder.append("name=").append(name).append(", variables=").append(variables);
+		builder.append("name=").append(name);
+		builder.append(", variables=").append(variables);
 		if(parent == null)
 			builder.append(", executionDO=").append(executionDO);
 		builder.append("]");

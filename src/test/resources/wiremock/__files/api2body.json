@@ -1,0 +1,1 @@
+{"STATUS":"SUCCESS","param1res":"res-{{jsonPath request.body "$.outer.param1"}}"}

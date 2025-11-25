@@ -10,7 +10,7 @@
                         http://www.springframework.org/schema/util
 						http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<bean id="allFieldsPostCallerFactory" class="org.simple4j.wsclient.caller.FreeMarkerJSONCallerFactory">
+	<bean id="api2CallerFactory" class="org.simple4j.wsclient.caller.FreeMarkerJSONCallerFactory">
 		<property name="httpWSClient" ref="httpWSClient"></property>
 		<property name="jSONConfig">
 			<value>
@@ -20,14 +20,15 @@
 	"freemarkerVersion":"2.3.23",
     "request": {
         "method": "POST",
-        "urlPattern": "/eventdistributorws/eppublic/V1/event.json",
-        "body": "{\"businessRecordId\" : \"${businessRecordId}\",\"businessRecordType\" : \"${businessRecordType}\",\"businessRecordSubType\" : \"${businessRecordSubType}\",\"businessRecordVersion\" : \"${businessRecordVersion}\",\"source\" : \"${source}\"}",
+        "urlPattern": "/system1/api2.json",
+        "body": "{\"outer\" : {\"param1\" : \"${PARAM1}\"}}",
         "staticHeaders": {
             "Content-Type": "application/JSON"
         },
         "headers": {
         "callerId":"${callerId}",
-        "userId":"${userId}"
+        "userId":"${userId}",
+        "header1": "${header1}"
         }
     },
     "response": {

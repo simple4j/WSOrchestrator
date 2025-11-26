@@ -72,8 +72,13 @@ public class MainTest
 	{
 		FlowDO response = orch.execute("simpleFlow");
 //		System.out.println("testSimpleFlow response:"+ response);
-		System.out.println("./010-step-ws/callerId="+response.getVariableValue("./010-step-ws/callerId"));
-//		Assert.assertTrue("Failed testcases are :" + tcPaths, success);
+		Object respCallerId = response.getVariableValue("./010-step-ws/callerId");
+		Object flowRandNum3Digit = response.getVariableValue("./FLOW:RANDOM_NUM_3DIGIT");
+		
+		System.out.println("./010-step-ws/callerId="+respCallerId);
+		System.out.println("./FLOW:RANDOM_NUM_3DIGIT="+flowRandNum3Digit);
+		
+		Assert.assertEquals( respCallerId,flowRandNum3Digit );
 	}
 
 	@Test
@@ -81,7 +86,40 @@ public class MainTest
 	{
 		FlowDO response = orch.execute("sublevelFlow");
 //		System.out.println("testSubLevelFlow response:"+ response);
-		System.out.println("./010-step-ws/callerId="+response.getVariableValue("./010-step-ws/callerId"));
-//		Assert.assertTrue("Failed testcases are :" + tcPaths, success);
+		Object respCallerId = response.getVariableValue("./02-subflow/020-step-ws/callerId");
+		Object flowRandNum3Digit = response.getVariableValue("./02-subflow/FLOW:RANDOM_NUM_3DIGIT");
+		
+		System.out.println("./02-subflow/020-step-ws/callerId="+respCallerId);
+		System.out.println("./02-subflow/FLOW:RANDOM_NUM_3DIGIT="+flowRandNum3Digit);
+		
+		Assert.assertEquals( respCallerId,flowRandNum3Digit );
+	}
+
+	@Test
+	public void test2SubLevelFlow()
+	{
+		FlowDO response = orch.execute("2sublevelFlow");
+//		System.out.println("testSubLevelFlow response:"+ response);
+		Object respCallerId = response.getVariableValue("./02-subflow/21-subflow/010-step-ws/callerId");
+		Object flowRandNum3Digit = response.getVariableValue("./02-subflow/21-subflow/FLOW:RANDOM_NUM_3DIGIT");
+		
+		System.out.println("./02-subflow/21-subflow/010-step-ws/callerId="+respCallerId);
+		System.out.println("./02-subflow/21-subflow/FLOW:RANDOM_NUM_3DIGIT="+flowRandNum3Digit);
+		
+		Assert.assertEquals( respCallerId,flowRandNum3Digit );
+	}
+
+	@Test
+	public void testComplexFlow()
+	{
+		FlowDO response = orch.execute("complexFlow");
+//		System.out.println("testSubLevelFlow response:"+ response);
+		Object respCallerId = response.getVariableValue("./40-subflow/21-subflow/010-step-ws/callerId");
+		Object flowRandNum3Digit = response.getVariableValue("./40-subflow/21-subflow/FLOW:RANDOM_NUM_3DIGIT");
+		
+		System.out.println("./02-subflow/21-subflow/010-step-ws/callerId="+respCallerId);
+		System.out.println("./02-subflow/21-subflow/FLOW:RANDOM_NUM_3DIGIT="+flowRandNum3Digit);
+		
+		Assert.assertEquals( respCallerId,flowRandNum3Digit );
 	}
 }

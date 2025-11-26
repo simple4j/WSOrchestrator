@@ -12,7 +12,7 @@ public class ValueRetriever
 
 	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	protected Map<String, Object> variables = null;
+	protected Map<String, Object> variables = new HashMap<String, Object>();
 	
 	public Map<String, Object> getVariables()
 	{

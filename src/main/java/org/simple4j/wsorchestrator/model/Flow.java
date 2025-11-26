@@ -35,6 +35,7 @@ public class Flow implements Executable
 			throw new RuntimeException("flowDir does not exist");
 		
 		this.flowDir = flowDir;
+		this.flowVariablesFile = new File(this.flowDir, "flowvariables.properties");
 		this.loadConfigs();
 	}
 

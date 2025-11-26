@@ -26,7 +26,10 @@ public class FlowDO extends ValueRetriever
 		{
 			this.parent.variables.put(name, this);
 		}
-    	variables = ConfigLoader.loadExecutionOrFlowVariables(flowVariablesFile , variables, "FLOW:");
+		if(flowVariablesFile.exists())
+		{
+	    	variables = ConfigLoader.loadExecutionOrFlowVariables(flowVariablesFile , variables, "FLOW:");
+		}
 	}
 	
 	@Override

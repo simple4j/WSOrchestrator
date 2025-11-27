@@ -6,10 +6,11 @@ import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.List;
 
-import org.simple4j.wsorchestrator.core.ConfigLoader;
 import org.simple4j.wsorchestrator.data.ExecutionDO;
 import org.simple4j.wsorchestrator.data.FlowDO;
+import org.simple4j.wsorchestrator.exception.SystemException;
 import org.simple4j.wsorchestrator.model.Flow;
+import org.simple4j.wsorchestrator.util.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -27,10 +28,10 @@ public class Orchestrator
 		super();
 
 		if(flowsDir == null)
-			throw new RuntimeException("flowsDir is null");
+			throw new SystemException("FLOWS_DIRECTORY_NULL","flowsDir is null");
 		
 		if(connectorsApplicationContext == null)
-			throw new RuntimeException("connectorsApplicationContext is null");
+			throw new SystemException("CONNECTORAPPLICATIONCONTEXT_NULL", "connectorsApplicationContext is null");
 		
 		this.flowsDir = flowsDir;
 		this.connectorsApplicationContext = connectorsApplicationContext;
@@ -48,7 +49,7 @@ public class Orchestrator
 		FlowDO ret = null;
 		Flow flow = this.getFlow(flowDir);
 		if(flow == null)
-			throw new RuntimeException("Flow not found:"+flowDir);
+			throw new SystemException("FLOW_NOT_FOUND", "Flow not found:"+flowDir);
 		ExecutionDO executionDO = new ExecutionDO(this.flowsDir, this.connectorsApplicationContext);
 		ret = flow.execute(executionDO);
 		return ret ;

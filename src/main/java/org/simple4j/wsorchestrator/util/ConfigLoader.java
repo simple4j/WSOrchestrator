@@ -1,4 +1,4 @@
-package org.simple4j.wsorchestrator.core;
+package org.simple4j.wsorchestrator.util;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -122,7 +122,7 @@ public class ConfigLoader
 			{
 				String key = (String) iterator.next();
 
-				logger.info("processing key:" + key);
+				logger.info("Start processing key: {}", key);
 
 				Object eval;
 					eval = flowDO.getVariableValue("" + loadedVariables.getProperty(key));
@@ -131,6 +131,7 @@ public class ConfigLoader
 				{
 					eval=loadedVariables.getProperty(key);
 				}
+				logger.info("End processing key: {} , value: {}", key, eval);
 				ret.put("" + key, eval);
 
 			}

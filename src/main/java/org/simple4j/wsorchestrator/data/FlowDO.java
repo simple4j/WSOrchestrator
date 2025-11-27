@@ -3,7 +3,8 @@ package org.simple4j.wsorchestrator.data;
 import java.io.File;
 import java.lang.invoke.MethodHandles;
 
-import org.simple4j.wsorchestrator.core.ConfigLoader;
+import org.simple4j.wsorchestrator.exception.SystemException;
+import org.simple4j.wsorchestrator.util.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ public class FlowDO extends ValueRetriever
 			{
 				variableName = variableName.substring(3);
 				if(this.parent == null)
-					throw new RuntimeException("Trying to get variable value from parent of the root flow");
+					throw new SystemException("PARENT_FLOWDO_NULL", "Trying to get variable value from parent of the root flow");
 				return this.parent.getVariableValue(variableName);
 			}
 		}

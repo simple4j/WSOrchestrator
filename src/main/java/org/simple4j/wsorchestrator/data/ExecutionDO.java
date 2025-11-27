@@ -3,7 +3,8 @@ package org.simple4j.wsorchestrator.data;
 import java.io.File;
 import java.lang.invoke.MethodHandles;
 
-import org.simple4j.wsorchestrator.core.ConfigLoader;
+import org.simple4j.wsorchestrator.exception.SystemException;
+import org.simple4j.wsorchestrator.util.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -20,11 +21,11 @@ public class ExecutionDO extends ValueRetriever
 		logger.info("Entering ExecutionDO {} {}", flowsDirectory, connectorsApplicationContext);
 		
 		if(flowsDirectory == null || !flowsDirectory.exists() || !flowsDirectory.isDirectory())
-			throw new RuntimeException("flowsDirectory is null or not an existing directory :"+flowsDirectory);
+			throw new SystemException("FLOWS_DIRECTORY_NULL_NOT_EXISTSS", "flowsDirectory is null or not an existing directory :"+flowsDirectory);
 		this.flowsDirectory = flowsDirectory;
 		
 		if(connectorsApplicationContext == null)
-			throw new RuntimeException("connectorsApplicationContext is null");
+			throw new SystemException("CONNECTORAPPLICATIONCONTEXT_NULL", "connectorsApplicationContext is null");
 		this.connectorsApplicationContext = connectorsApplicationContext;
 		
 		this.loadCustomVariables();

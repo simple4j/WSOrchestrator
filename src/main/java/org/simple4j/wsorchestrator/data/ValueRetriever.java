@@ -3,7 +3,9 @@ package org.simple4j.wsorchestrator.data;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.simple4j.wsorchestrator.exception.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +14,7 @@ public class ValueRetriever
 
 	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	protected Map<String, Object> variables = new HashMap<String, Object>();
+	protected Map<String, Object> variables = new ConcurrentHashMap<String, Object>();
 	
 	public Map<String, Object> getVariables()
 	{
@@ -64,7 +66,7 @@ public class ValueRetriever
 			}
 			else
 			{
-				throw new RuntimeException("Child is not of type ValueRetriever");
+				throw new SystemException("CHILD_TYPE_INVALID", "Child is not of type ValueRetriever");
 			}
 		}
 		

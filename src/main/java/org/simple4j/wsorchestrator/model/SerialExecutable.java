@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import org.simple4j.wsorchestrator.data.ExecutionDO;
 import org.simple4j.wsorchestrator.data.FlowDO;
+import org.simple4j.wsorchestrator.exception.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,7 @@ public class SerialExecutable implements Executable
 	public SerialExecutable(LinkedList<Step> steps)
 	{
 		if(steps == null)
-			throw new RuntimeException("steps is null");
+			throw new SystemException("STEPS_NULL","steps is null");
 		this.steps.addAll(steps);
 	}
 

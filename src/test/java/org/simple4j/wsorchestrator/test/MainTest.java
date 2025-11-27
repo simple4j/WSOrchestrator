@@ -67,6 +67,11 @@ public class MainTest
 	 * 3. two level sub-flows with cross referencing variables
 	 * 4. flow with steps, sub-flows, steps and sub-flows
 	 */
+	
+	/**
+	 * This test case is for a simple one level flow with steps that have inter-step referencing variables.
+	 * 
+	 */
 	@Test
 	public void testSimpleFlow()
 	{
@@ -81,6 +86,9 @@ public class MainTest
 		Assert.assertEquals( respCallerId,flowRandNum3Digit );
 	}
 
+	/**
+	 * This test case is for 1 level of multiple sub-flows and make sure the parallel execution done between sub-flows
+	 */
 	@Test
 	public void testSubLevelFlow()
 	{
@@ -95,6 +103,10 @@ public class MainTest
 		Assert.assertEquals( respCallerId,flowRandNum3Digit );
 	}
 
+	/**
+	 * This test case is for 2 levels of multiple sub-flows and some flows not having flowvariables.properties.
+	 * This also has variable referencing of flow variable from a parent flow.
+	 */
 	@Test
 	public void test2SubLevelFlow()
 	{
@@ -109,6 +121,11 @@ public class MainTest
 		Assert.assertEquals( respCallerId,flowRandNum3Digit );
 	}
 
+	/**
+	 * This test case is to test combination of steps and flows to make sure the execution switches
+	 * between serial and parallel execution.
+	 * 
+	 */
 	@Test
 	public void testComplexFlow()
 	{

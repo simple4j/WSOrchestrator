@@ -3,9 +3,9 @@ package org.simple4j.wsorchestrator.model;
 import java.io.File;
 import java.lang.invoke.MethodHandles;
 
-import org.simple4j.wsorchestrator.core.ConfigLoader;
 import org.simple4j.wsorchestrator.data.ExecutionDO;
 import org.simple4j.wsorchestrator.data.FlowDO;
+import org.simple4j.wsorchestrator.util.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

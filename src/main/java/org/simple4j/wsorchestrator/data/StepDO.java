@@ -9,7 +9,8 @@ import java.util.Map.Entry;
 
 import org.mvel2.MVEL;
 import org.simple4j.wsclient.util.CollectionsPathRetreiver;
-import org.simple4j.wsorchestrator.core.ConfigLoader;
+import org.simple4j.wsorchestrator.exception.SystemException;
+import org.simple4j.wsorchestrator.util.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ public class StepDO extends ValueRetriever
 		this.variables = ConfigLoader.loadStepVariables(inputFile, parent);
 
 		String stepAbsolutePath = inputFile.getAbsolutePath();
-		this.name = stepAbsolutePath.substring(this.executionDO.getFlowsDirectory().getAbsolutePath().length(),stepAbsolutePath.length()-"input.properties".length());
+		this.name = stepAbsolutePath.substring(this.executionDO.getFlowsDirectory().getAbsolutePath().length(),stepAbsolutePath.length()-"-input.properties".length());
 		String inputFileName = inputFile.getName();
 		logger.info("inputFileName {}", inputFileName);
 		this.shortName = inputFileName.substring(0,inputFileName.length()-"-input.properties".length());
@@ -113,13 +114,13 @@ public class StepDO extends ValueRetriever
 	                {
 	                    logger.info("FAILURE: step "+ this.name +" for assertion "+assertExpression);
 	                    logger.info("Step variables are "+outputProperties);
-	    	            throw new RuntimeException("FAILURE: step "+ this.name +" for assertion "+assertExpression);
+	    	            throw new SystemException("ASSERTION_FAILURE", "Step "+ this.name +" for assertion "+assertExpression);
 	                }
 	            }
 	            else
 	            {
 	                logger.info("FAILURE: Assertion expression "+assertExpression+" return non-boolean value "+ assertExpressionResult + " of type "+assertExpressionResult.getClass());
-	                throw new RuntimeException("FAILURE: Assertion expression "+assertExpression+" return non-boolean value "+ assertExpressionResult + " of type "+assertExpressionResult.getClass());
+	                throw new SystemException("ASSERTION_NON_BOOLEAN", "Assertion expression "+assertExpression+" return non-boolean value "+ assertExpressionResult + " of type "+assertExpressionResult.getClass());
 	            }
 	        }
 		}

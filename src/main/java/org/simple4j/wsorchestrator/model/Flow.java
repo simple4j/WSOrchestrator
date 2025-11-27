@@ -9,9 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import org.simple4j.wsorchestrator.core.ConfigLoader;
 import org.simple4j.wsorchestrator.data.ExecutionDO;
 import org.simple4j.wsorchestrator.data.FlowDO;
+import org.simple4j.wsorchestrator.exception.SystemException;
+import org.simple4j.wsorchestrator.util.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +29,11 @@ public class Flow implements Executable
 	{
 		logger.info("Flow {}", flowDir);
 		if(flowDir == null)
-			throw new RuntimeException("flowDir is null");
+			throw new SystemException("FLOW_DIRECTORY_NULL","flowDir is null");
 		if(!flowDir.isDirectory())
-			throw new RuntimeException("flowDir is not a directory");
+			throw new SystemException("FLOW_DIRECTORY_IS_NOT_DIRECTORY","flowDir is not a directory");
 		if(!flowDir.exists())
-			throw new RuntimeException("flowDir does not exist");
+			throw new SystemException("FLOW_DIRECTORY_DOESNOT_EXIST","flowDir does not exist");
 		
 		this.flowDir = flowDir;
 		this.flowVariablesFile = new File(this.flowDir, "flowvariables.properties");

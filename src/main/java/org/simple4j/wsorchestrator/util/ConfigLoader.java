@@ -37,8 +37,6 @@ public class ConfigLoader
 	 * @param variablesFile - input stream to load the variables in properties format
 	 * @param globalVariables2 - Existing variables to evaluate bean shell expression 
 	 * @return - returns Map of loaded variables
-	 * @throws IOException - Any IOException from the system
-	 * @throws EvalError - Any BeanShell evaluation errors
 	 */
 	public static Map<String, Object> loadExecutionOrFlowVariables(File variablesFile,
 			Map<String, Object> globalVariables2, String prefix)
@@ -105,7 +103,6 @@ public class ConfigLoader
 	 * @param stepVariablesFile - this can be step *-input.properties or *-input.properties file
 	 * @param executionFlowDO - flow object under which the step is defined
 	 * @return Map of loaded properties
-	 * @throws IOException - any IOException from the system
 	 */
 	public static Map<String, Object> loadStepVariables(File stepVariablesFile, ExecutionFlowDO executionFlowDO)
 	{

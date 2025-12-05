@@ -8,32 +8,35 @@ import org.simple4j.wsclient.caller.CallerFactory;
 import org.simple4j.wsclient.caller.ICaller;
 import org.simple4j.wsclient.exception.SystemException;
 import org.simple4j.wsorchestrator.data.ExecutionDO;
-import org.simple4j.wsorchestrator.data.FlowDO;
-import org.simple4j.wsorchestrator.data.StepDO;
+import org.simple4j.wsorchestrator.data.ExecutionFlowDO;
+import org.simple4j.wsorchestrator.data.ExecutionStepDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WSStep extends Step
+/**
+ * Concrete implementation of ExecutionStep that encapsulates the logic to execute a Web Service execution step that makes the Web Service call.
+ */
+public class WSExecutionStep extends ExecutionStep
 {
 	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public WSStep(File inputFile)
+	public WSExecutionStep(File inputFile)
 	{
 		super(inputFile);
 	}
 
 	@Override
-	public void execute(ExecutionDO executionDO, FlowDO parent)
+	public void execute(ExecutionDO executionDO, ExecutionFlowDO parent)
 	{
-		// 1. get caller factory bean id from input file
+		// 1. get caller factory bean id or caller bean id from input file
 		// 2. get caller from connectorsAppliactionContext from executionDO
 		// 3. call the caller with the input variables
 		// 4. call super to process response from the caller
 
-		StepDO stepDO = new StepDO(executionDO, parent, this.inputFile, this.outputFile);
+		ExecutionStepDO executionStepDO = new ExecutionStepDO(executionDO, parent, this.inputFile, this.outputFile);
 		
 		ICaller caller = null;
-    	Object callerBeanIdObj = stepDO.getVariableValue("callerBeanId");
+    	Object callerBeanIdObj = executionStepDO.getVariableValue("callerBeanId");
     	if(callerBeanIdObj != null)
     	{
     		String callerBeanId = (String) callerBeanIdObj;
@@ -41,7 +44,7 @@ public class WSStep extends Step
     	}
     	else
     	{
-        	Object callerFactoryBeanIdObj = stepDO.getVariableValue("callerFactoryBeanId");
+        	Object callerFactoryBeanIdObj = executionStepDO.getVariableValue("callerFactoryBeanId");
         	if(callerFactoryBeanIdObj != null)
         	{
         		String callerFactoryBeanId = (String) callerFactoryBeanIdObj;
@@ -55,8 +58,8 @@ public class WSStep extends Step
         logger.debug("Calling service");
 
 		
-		Map<String, Object> response = caller.call(stepDO.getVariables());
-		stepDO.processStepExecutionResponse(response);
+		Map<String, Object> response = caller.call(executionStepDO.getVariables());
+		executionStepDO.processStepExecutionResponse(response);
 		
 	}
 

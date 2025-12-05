@@ -5,8 +5,11 @@ import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,7 +18,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.simple4j.wsorchestrator.Orchestrator;
-import org.simple4j.wsorchestrator.data.FlowDO;
+import org.simple4j.wsorchestrator.data.ExecutionFlowDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -39,7 +42,7 @@ public class MainTest
 	{
 		wm1 = new WireMockServer(WireMockConfiguration.options().bindAddress("localhost").port(2001).withRootDirectory(MainTest.class.getResource("/wiremock").getPath()));
 		wm1.start();
-		flowsDir = new File(MainTest.class.getResource("/flowsDir").getPath());
+		flowsDir = new File(MainTest.class.getResource("/flowsRootDirecory").getPath());
 		ac = new ClassPathXmlApplicationContext("/connectors/wiremock/appContext.xml");
 		orch = new Orchestrator(flowsDir, ac);
 	}
@@ -75,15 +78,23 @@ public class MainTest
 	@Test
 	public void testSimpleFlow()
 	{
-		FlowDO response = orch.execute("simpleFlow");
+		Map<String, Object> executionParameters = new HashMap<String, Object>();
+		UUID uuid = UUID.randomUUID();
+		
+		String stringUUID = uuid.toString();
+		executionParameters.put("someExecutionParam", stringUUID);
+		ExecutionFlowDO response = orch.execute("simpleFlow", executionParameters );
 //		System.out.println("testSimpleFlow response:"+ response);
+
 		Object respCallerId = response.getVariableValue("./010-step-ws/callerId");
 		Object flowRandNum3Digit = response.getVariableValue("./FLOW:RANDOM_NUM_3DIGIT");
+		Object respHeader2 = response.getVariableValue("./010-step-ws/header2");
 		
 		System.out.println("./010-step-ws/callerId="+respCallerId);
 		System.out.println("./FLOW:RANDOM_NUM_3DIGIT="+flowRandNum3Digit);
 		
 		Assert.assertEquals( respCallerId,flowRandNum3Digit );
+		Assert.assertEquals("executionParameters check failure", respHeader2, stringUUID );
 	}
 
 	/**
@@ -92,7 +103,7 @@ public class MainTest
 	@Test
 	public void testSubLevelFlow()
 	{
-		FlowDO response = orch.execute("sublevelFlow");
+		ExecutionFlowDO response = orch.execute("sublevelFlow", null);
 //		System.out.println("testSubLevelFlow response:"+ response);
 		Object respCallerId = response.getVariableValue("./02-subflow/020-step-ws/callerId");
 		Object flowRandNum3Digit = response.getVariableValue("./02-subflow/FLOW:RANDOM_NUM_3DIGIT");
@@ -110,7 +121,7 @@ public class MainTest
 	@Test
 	public void test2SubLevelFlow()
 	{
-		FlowDO response = orch.execute("2sublevelFlow");
+		ExecutionFlowDO response = orch.execute("2sublevelFlow", null);
 //		System.out.println("testSubLevelFlow response:"+ response);
 		Object respCallerId = response.getVariableValue("./02-subflow/21-subflow/010-step-ws/callerId");
 		Object flowRandNum3Digit = response.getVariableValue("./02-subflow/21-subflow/FLOW:RANDOM_NUM_3DIGIT");
@@ -129,7 +140,7 @@ public class MainTest
 	@Test
 	public void testComplexFlow()
 	{
-		FlowDO response = orch.execute("complexFlow");
+		ExecutionFlowDO response = orch.execute("complexFlow", null);
 //		System.out.println("testSubLevelFlow response:"+ response);
 		Object respCallerId = response.getVariableValue("./40-subflow/21-subflow/010-step-ws/callerId");
 		Object flowRandNum3Digit = response.getVariableValue("./40-subflow/21-subflow/FLOW:RANDOM_NUM_3DIGIT");

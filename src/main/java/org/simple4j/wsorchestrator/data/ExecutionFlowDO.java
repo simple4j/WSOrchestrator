@@ -8,18 +8,21 @@ import org.simple4j.wsorchestrator.util.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FlowDO extends ValueRetriever
+/**
+ * This will hold the data of an execution flow. It can be the root execution flow or any sub-execution flow.
+ */
+public class ExecutionFlowDO extends ValueRetriever
 {
 
 	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private ExecutionDO executionDO = null;
-	private FlowDO parent = null;
+	private ExecutionFlowDO parent = null;
 	private String name = null;
 	
-	public FlowDO(ExecutionDO executionDO, FlowDO parent, File flowVariablesFile)
+	public ExecutionFlowDO(ExecutionDO executionDO, ExecutionFlowDO parent, File flowVariablesFile)
 	{
-		logger.info("Entering FlowDO {} {} {}", executionDO, parent, flowVariablesFile);
+		logger.info("Entering ExecutionFlowDO {} {} {}", executionDO, parent, flowVariablesFile);
 		this.executionDO = executionDO;
 		this.parent = parent;
 		this.name = flowVariablesFile.getParentFile().getName();
@@ -44,7 +47,7 @@ public class FlowDO extends ValueRetriever
 			{
 				variableName = variableName.substring(3);
 				if(this.parent == null)
-					throw new SystemException("PARENT_FLOWDO_NULL", "Trying to get variable value from parent of the root flow");
+					throw new SystemException("PARENT_EXECUTIONFLOWDO_NULL", "Trying to get variable value from parent of the root flow");
 				return this.parent.getVariableValue(variableName);
 			}
 		}

@@ -4,36 +4,44 @@ import java.lang.invoke.MethodHandles;
 import java.util.LinkedList;
 
 import org.simple4j.wsorchestrator.data.ExecutionDO;
-import org.simple4j.wsorchestrator.data.FlowDO;
+import org.simple4j.wsorchestrator.data.ExecutionFlowDO;
 import org.simple4j.wsorchestrator.exception.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class encapsulates the logic for serial execution of sibling execution steps.
+ */
 public class SerialExecutable implements Executable
 {
 	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private LinkedList<Step> steps = new LinkedList<Step>();
+	private LinkedList<ExecutionStep> executionSteps = new LinkedList<ExecutionStep>();
 	
-	public SerialExecutable(LinkedList<Step> steps)
+	/**
+	 * 
+	 * @param executionSteps - list of execution steps that will get executed when this SerialExecutable is executed
+	 */
+	public SerialExecutable(LinkedList<ExecutionStep> executionSteps)
 	{
-		if(steps == null)
+		if(executionSteps == null)
 			throw new SystemException("STEPS_NULL","steps is null");
-		this.steps.addAll(steps);
+		this.executionSteps.addAll(executionSteps);
 	}
 
-	public void execute(ExecutionDO executionDO, FlowDO parent)
+	public void execute(ExecutionDO executionDO, ExecutionFlowDO parent)
 	{
-		for(int i = 0 ; i < this.steps.size() ; i++)
+		for(int i = 0 ; i < this.executionSteps.size() ; i++)
 		{
-			this.steps.get(i).execute(executionDO, parent);
+			this.executionSteps.get(i).execute(executionDO, parent);
 		}
 	}
+	
 	@Override
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append(super.toString()).append(" [steps=").append(steps).append("]");
+		builder.append(super.toString()).append(" [executionSteps=").append(executionSteps).append("]");
 		return builder.toString();
 	}
 }

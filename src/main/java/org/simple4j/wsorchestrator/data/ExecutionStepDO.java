@@ -14,19 +14,22 @@ import org.simple4j.wsorchestrator.util.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StepDO extends ValueRetriever
+/**
+ * This will hold the data of an execution step.
+ */
+public class ExecutionStepDO extends ValueRetriever
 {
 
 	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private ExecutionDO executionDO = null;
-	private FlowDO parent = null;
+	private ExecutionFlowDO parent = null;
 	private File inputFile = null;
 	private File outputFile = null;
 	private String name = null;
 	private String shortName = null;
 	
-	public StepDO(ExecutionDO executionDO, FlowDO parent, File inputFile, File outputFile)
+	public ExecutionStepDO(ExecutionDO executionDO, ExecutionFlowDO parent, File inputFile, File outputFile)
 	{
 		this.executionDO = executionDO;
 		this.parent = parent;
@@ -35,7 +38,7 @@ public class StepDO extends ValueRetriever
 		this.variables = ConfigLoader.loadStepVariables(inputFile, parent);
 
 		String stepAbsolutePath = inputFile.getAbsolutePath();
-		this.name = stepAbsolutePath.substring(this.executionDO.getFlowsDirectory().getAbsolutePath().length(),stepAbsolutePath.length()-"-input.properties".length());
+		this.name = stepAbsolutePath.substring(this.executionDO.getFlowsRootDirectory().getAbsolutePath().length(),stepAbsolutePath.length()-"-input.properties".length());
 		String inputFileName = inputFile.getName();
 		logger.info("inputFileName {}", inputFileName);
 		this.shortName = inputFileName.substring(0,inputFileName.length()-"-input.properties".length());

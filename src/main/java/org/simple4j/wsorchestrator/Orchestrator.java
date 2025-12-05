@@ -1,62 +1,78 @@
 package org.simple4j.wsorchestrator;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.simple4j.wsorchestrator.data.ExecutionDO;
-import org.simple4j.wsorchestrator.data.FlowDO;
+import org.simple4j.wsorchestrator.data.ExecutionFlowDO;
 import org.simple4j.wsorchestrator.exception.SystemException;
-import org.simple4j.wsorchestrator.model.Flow;
+import org.simple4j.wsorchestrator.model.ExecutionFlow;
 import org.simple4j.wsorchestrator.util.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+
+/**
+ * The instance of this class is created at the application startup and it will represent an orchestrator with one or more flows. 
+ */
 
 public class Orchestrator
 {
 
 	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private HashMap<String, Flow> flows = new HashMap<String, Flow>();
-	private File flowsDir = null; 
+	private HashMap<String, ExecutionFlow> executioFlows = new HashMap<String, ExecutionFlow>();
+	private File flowsRootDirectory = null; 
 	private ApplicationContext connectorsApplicationContext = null;
-	public Orchestrator(File flowsDir, ApplicationContext connectorsApplicationContext)
+	
+	/**
+	 * 
+	 */
+	public Orchestrator(File flowsRootDirectory, ApplicationContext connectorsApplicationContext)
 	{
 		super();
 
-		if(flowsDir == null)
-			throw new SystemException("FLOWS_DIRECTORY_NULL","flowsDir is null");
+		if(flowsRootDirectory == null)
+			throw new SystemException("FLOWS_ROOT_DIRECTORY_NULL","flowsRootDirectory is null");
 		
 		if(connectorsApplicationContext == null)
 			throw new SystemException("CONNECTORAPPLICATIONCONTEXT_NULL", "connectorsApplicationContext is null");
 		
-		this.flowsDir = flowsDir;
+		this.flowsRootDirectory = flowsRootDirectory;
 		this.connectorsApplicationContext = connectorsApplicationContext;
-		List<File> flowDirs = ConfigLoader.getChildrenDirectories(flowsDir);
-		for(int i = 0 ; i < flowDirs.size() ; i++)
+		List<File> flowDirectories = ConfigLoader.getChildrenDirectories(flowsRootDirectory);
+		for(int i = 0 ; i < flowDirectories.size() ; i++)
 		{
-			this.flows.put(flowDirs.get(i).getName(), new Flow(flowDirs.get(i)));
+			this.executioFlows.put(flowDirectories.get(i).getName(), new ExecutionFlow(flowDirectories.get(i)));
 		}
 		
-		logger.info("Loaded flows :  {}", this.flows);
+		logger.info("Loaded flows :  {}", this.executioFlows);
 	}
 	
-	public FlowDO execute(String flowDir)
+	/**
+	 * Executes an execution flow and returns the data object
+	 * 
+	 * @param flowDirectory - flow directory name from the flowsRootDirectory location
+	 * @param executionParameters - any parameters to be passed to the execution that will be used as variables any step 
+	 * @return
+	 */
+	public ExecutionFlowDO execute(String flowDirectory, Map<String, Object> executionParameters)
 	{
-		FlowDO ret = null;
-		Flow flow = this.getFlow(flowDir);
-		if(flow == null)
-			throw new SystemException("FLOW_NOT_FOUND", "Flow not found:"+flowDir);
-		ExecutionDO executionDO = new ExecutionDO(this.flowsDir, this.connectorsApplicationContext);
-		ret = flow.execute(executionDO);
+		ExecutionFlowDO ret = null;
+		ExecutionFlow executionFlow = this.getExecutionFlow(flowDirectory);
+		if(executionFlow == null)
+			throw new SystemException("FLOW_NOT_FOUND", "Flow not found:"+flowDirectory);
+		
+		ExecutionDO executionDO = new ExecutionDO(this.flowsRootDirectory, this.connectorsApplicationContext, executionParameters);
+		ret = executionFlow.execute(executionDO);
 		return ret ;
 	}
 
-	public Flow getFlow(String flowDir)
+	private ExecutionFlow getExecutionFlow(String flowDirectory)
 	{
-		return flows.get(flowDir);
+		return executioFlows.get(flowDirectory);
 	}
 }

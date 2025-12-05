@@ -20,8 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.mvel2.MVEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.simple4j.wsorchestrator.data.FlowDO;
-import org.simple4j.wsorchestrator.model.Flow;
+import org.simple4j.wsorchestrator.data.ExecutionFlowDO;
+import org.simple4j.wsorchestrator.model.ExecutionFlow;
 
 /**
  * This is a utility class with methods to load step and flow properties, deference variables.
@@ -31,7 +31,8 @@ public class ConfigLoader
 	private static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
-	 * Used to load /flowvariables.properties under flow directories
+	 * Used to load executionvariables.properties under flowsRootDirectory or flowvariables.properties under flow directories.
+	 * This method will evaluate MVEL expressions for property values starting with MVEL:
 	 * 
 	 * @param variablesFile - input stream to load the variables in properties format
 	 * @param globalVariables2 - Existing variables to evaluate bean shell expression 
@@ -102,13 +103,13 @@ public class ConfigLoader
 	/**
 	 * Loads step level properties without MVEL processing
 	 * @param stepVariablesFile - this can be step *-input.properties or *-input.properties file
-	 * @param flowDO - flow object under which the step is defined
+	 * @param executionFlowDO - flow object under which the step is defined
 	 * @return Map of loaded properties
 	 * @throws IOException - any IOException from the system
 	 */
-	public static Map<String, Object> loadStepVariables(File stepVariablesFile, FlowDO flowDO)
+	public static Map<String, Object> loadStepVariables(File stepVariablesFile, ExecutionFlowDO executionFlowDO)
 	{
-		logger.info("Inside loadStepVariables: {}, {}", stepVariablesFile, flowDO);
+		logger.info("Inside loadStepVariables: {}, {}", stepVariablesFile, executionFlowDO);
 		try
 		{
 			Properties loadedVariables = loadProperties(stepVariablesFile);
@@ -125,7 +126,7 @@ public class ConfigLoader
 				logger.info("Start processing key: {}", key);
 
 				Object eval;
-					eval = flowDO.getVariableValue("" + loadedVariables.getProperty(key));
+					eval = executionFlowDO.getVariableValue("" + loadedVariables.getProperty(key));
 				logger.info("Dereferenced flow property value:" + eval);
 				if(eval == null)
 				{
@@ -166,6 +167,12 @@ public class ConfigLoader
 	}
 
 	private static ConcurrentHashMap<File, Properties> loadedPropertiesCache = new ConcurrentHashMap<File, Properties>();
+	/**
+	 * This loads the properties file and returns without any processing.
+	 * It has in memory cache. If the same files is passed, it will retrieve the properties from the cache avoiding IO
+	 * @param variablesFile
+	 * @return
+	 */
 	public static Properties loadProperties(File variablesFile)
 	{
 		Properties ret = new Properties();
@@ -205,6 +212,11 @@ public class ConfigLoader
 	}
 
 	private static HashMap<String, List<File>> filePath2ChildrenDirectories = new HashMap<>();
+	/**
+	 * Returns all the child directories of parentDir
+	 * @param parentDir
+	 * @return
+	 */
 	public static List<File> getChildrenDirectories(File parentDir)
 	{
 		try

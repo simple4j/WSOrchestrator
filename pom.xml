@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.simple4j</groupId>
 	<artifactId>WSOrchestrator</artifactId>
-	<version>25.12.06.1</version>
+	<version>25.12.06.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>WSOrchestrator</name>
 	<url>https://github.com/simple4j/WSOrchestrator</url>
@@ -30,11 +30,11 @@
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<url>https://ossrh-staging-api.central.sonatype.com/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<repository>
 			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+			<url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
 	<dependencies>
@@ -207,7 +207,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<nexusUrl>https://ossrh-staging-api.central.sonatype.com</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 				  <dependencies>

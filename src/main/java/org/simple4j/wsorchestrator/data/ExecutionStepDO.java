@@ -68,6 +68,46 @@ public class ExecutionStepDO extends ValueRetriever
 			return ret;
 		return this.executionDO.getVariableValue(variableName);
 	}
+	
+	public boolean canExecute()
+	{
+		boolean ret = true;
+		if(this.variables.containsKey("EXECUTE_IF"))
+		{
+			String executeIfExpression = ""+this.variables.get("EXECUTE_IF");
+
+            Object executeIfExpressionResult;
+			try
+			{
+				logger.info("executeIfExpression : {}", executeIfExpression);
+				executeIfExpressionResult = MVEL.eval(executeIfExpression, this.variables);
+				logger.info("executeIfExpressionResult : {}", executeIfExpressionResult);
+			} catch (Throwable e)
+    		{
+				logger.error("Error while evaluating EXECUTE_IF: {} in step: {}", executeIfExpression, this.name, e);
+	            throw new RuntimeException(e);
+			}
+            if(executeIfExpressionResult instanceof Boolean)
+            {
+                if(!((Boolean)executeIfExpressionResult))
+                {
+                   ret = false;
+                   this.variables.put("EXECUTE_IF", false);
+                }
+                else
+                {
+                    this.variables.put("EXECUTE_IF", true);
+                }
+            }
+            else
+            {
+                logger.info("Execute if expression "+executeIfExpression+" return non-boolean value "+ executeIfExpressionResult + " of type "+executeIfExpressionResult.getClass());
+                ret = false;
+                this.variables.put("EXECUTE_IF", false);
+            }
+		}
+		return ret;
+	}
 
 	public void processStepExecutionResponse(Map<String, Object> response)
 	{

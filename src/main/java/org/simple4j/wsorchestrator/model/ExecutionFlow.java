@@ -180,6 +180,11 @@ public class ExecutionFlow implements Executable
 		logger.info("Entering executeInternal {} {}", executionDO, parent);
 		ExecutionFlowDO executionFlowDO = new ExecutionFlowDO(executionDO, parent, this.flowVariablesFile);
 		
+		if(!executionFlowDO.canExecute())
+		{
+			return executionFlowDO;
+		}
+		
 		for(int i=0 ; i < executables.size() ; i++)
 		{
 			executables.get(i).execute(executionDO, executionFlowDO);

@@ -74,23 +74,49 @@ public class ConfigLoader
 
 			logger.debug("processing key:" + key);
 
-			Object eval = null;
-			if(loadedVariables.getProperty(key) != null &&
-					loadedVariables.getProperty(key).startsWith("MVEL:"))
+			if(key.equals("EXECUTE_IF"))
 			{
-				eval = MVEL.eval("" + loadedVariables.getProperty(key).replaceFirst("MVEL:", ""), vars);
+				Object executeIfExpressionResult = null;
+				String executeIfExpression = "" + loadedVariables.getProperty(key);
+				executeIfExpressionResult = MVEL.eval(executeIfExpression, vars);
+
+	            if(executeIfExpressionResult instanceof Boolean)
+	            {
+	                if(!((Boolean)executeIfExpressionResult))
+	                {
+	                   ret.put("EXECUTE_IF", false);
+	                }
+	                else
+	                {
+	                    ret.put("EXECUTE_IF", true);
+	                }
+	            }
+	            else
+	            {
+	                logger.info("Execute if expression "+executeIfExpression+" return non-boolean value "+ executeIfExpressionResult + " of type "+executeIfExpressionResult.getClass());
+	                ret.put("EXECUTE_IF", false);
+	            }
 			}
-			logger.debug("MVEL evaluated value:" + eval);
-			if (eval != null)
+			else
 			{
-				ret.put(prefix + key, eval);
-				vars.put(prefix + key, eval);
-				logger.debug("set evaluated:" + key + ":" + eval);
-			} else
-			{
-				ret.put(prefix + key, loadedVariables.getProperty(key));
-				vars.put(prefix + key, loadedVariables.getProperty(key));
-				logger.debug("set unevaluated:" + key + ":" + loadedVariables.getProperty(key));
+				Object eval = null;
+				if(loadedVariables.getProperty(key) != null &&
+						loadedVariables.getProperty(key).startsWith("MVEL:"))
+				{
+					eval = MVEL.eval("" + loadedVariables.getProperty(key).replaceFirst("MVEL:", ""), vars);
+				}
+				logger.debug("MVEL evaluated value:" + eval);
+				if (eval != null)
+				{
+					ret.put(prefix + key, eval);
+					vars.put(prefix + key, eval);
+					logger.debug("set evaluated:" + key + ":" + eval);
+				} else
+				{
+					ret.put(prefix + key, loadedVariables.getProperty(key));
+					vars.put(prefix + key, loadedVariables.getProperty(key));
+					logger.debug("set unevaluated:" + key + ":" + loadedVariables.getProperty(key));
+				}
 			}
 
 		}

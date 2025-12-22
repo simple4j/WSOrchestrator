@@ -36,6 +36,16 @@ public class ExecutionFlowDO extends ValueRetriever
 		}
 	}
 	
+	public boolean canExecute()
+	{
+		boolean ret = true;
+		if(this.variables.containsKey("EXECUTE_IF"))
+		{
+			return (boolean) this.variables.get("EXECUTE_IF");
+		}
+		return ret;
+	}
+	
 	@Override
 	public Object getVariableValue(String variableName)
 	{

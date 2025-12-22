@@ -35,6 +35,10 @@ public class WSExecutionStep extends ExecutionStep
 
 		ExecutionStepDO executionStepDO = new ExecutionStepDO(executionDO, parent, this.inputFile, this.outputFile);
 		
+		if(!executionStepDO.canExecute())
+		{
+			return;
+		}
 		ICaller caller = null;
     	Object callerBeanIdObj = executionStepDO.getVariableValue("callerBeanId");
     	if(callerBeanIdObj != null)

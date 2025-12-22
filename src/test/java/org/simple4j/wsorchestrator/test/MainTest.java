@@ -150,4 +150,51 @@ public class MainTest
 		
 		Assert.assertEquals( respCallerId,flowRandNum3Digit );
 	}
+
+	/**
+	 * This test case is to test EXECUTE_IF true/false cases at flow and step level
+	 * 
+	 */
+	@Test
+	public void testExecuteIfFlow()
+	{
+		ExecutionFlowDO response = orch.execute("executeIfFlow", null);
+		Object stepFalseExecuteIf = response.getVariableValue("./01-subflow/020-step-ws/EXECUTE_IF");
+		Object stepFalseExecuteIfStatusCode = response.getVariableValue("./01-subflow/020-step-ws/HTTP_STATUS_CODE");
+		
+		Object flowFalseExecuteIf = response.getVariableValue("./02-subflow/EXECUTE_IF");
+		Object flowFalseExecuteIfparam1 = response.getVariableValue("./02-subflow//010-step-ws/param1");
+		
+		
+		Object stepTrueExecuteIf = response.getVariableValue("./03-subflow/020-step-ws/EXECUTE_IF");
+		Object stepTrueExecuteIfStatusCode = response.getVariableValue("./03-subflow/020-step-ws/HTTP_STATUS_CODE");
+
+		Object flowTrueExecuteIf = response.getVariableValue("./04-subflow/EXECUTE_IF");
+		Object flowTrueExecuteIfparam12 = response.getVariableValue("./04-subflow/010-step-ws/param12");
+		
+		System.out.println("./01-subflow/020-subflow/EXECUTE_IF="+stepFalseExecuteIf);
+		System.out.println("./01-subflow/020-step-ws/HTTP_STATUS_CODE="+stepFalseExecuteIfStatusCode);
+
+		System.out.println("./02-subflow/EXECUTE_IF="+flowFalseExecuteIf);
+		System.out.println("./02-subflow//010-step-ws/param1="+flowFalseExecuteIfparam1);
+		
+		System.out.println("./03-subflow/020-subflow/EXECUTE_IF="+stepTrueExecuteIf);
+		System.out.println("./03-subflow/020-step-ws/HTTP_STATUS_CODE="+stepTrueExecuteIfStatusCode);
+		
+		System.out.println("./04-subflow/EXECUTE_IF="+flowTrueExecuteIf);
+		System.out.println("./04-subflow/010-step-ws/param12="+flowTrueExecuteIfparam12);
+
+		Assert.assertFalse("./01-subflow/020-subflow/EXECUTE_IF is not false", (boolean) stepFalseExecuteIf);
+		Assert.assertNull("./01-subflow/020-step-ws/HTTP_STATUS_CODE is not null", stepFalseExecuteIfStatusCode);
+		
+		Assert.assertFalse("./02-subflow/EXECUTE_IF not false", (boolean) flowFalseExecuteIf);
+		Assert.assertNull("./02-subflow//010-step-ws/param1 is not null", flowFalseExecuteIfparam1);
+		
+		Assert.assertTrue("./03-subflow/020-subflow/EXECUTE_IF is not true", (boolean) stepTrueExecuteIf);
+		Assert.assertNotNull("./03-subflow/020-step-ws/HTTP_STATUS_CODE is null", stepTrueExecuteIfStatusCode);
+		
+		Assert.assertTrue("./04-subflow/EXECUTE_IF is not true", (boolean) flowTrueExecuteIf);
+		Assert.assertNotNull("./04-subflow/010-step-ws/param12 is null", flowTrueExecuteIfparam12);
+		
+	}
 }

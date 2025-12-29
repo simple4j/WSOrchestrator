@@ -4,7 +4,7 @@ import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.util.Map;
 
-import org.simple4j.wsclient.caller.CallerFactory;
+import org.simple4j.wsclient.caller.factory.CallerFactory;
 import org.simple4j.wsclient.caller.ICaller;
 import org.simple4j.wsclient.exception.SystemException;
 import org.simple4j.wsorchestrator.data.ExecutionDO;

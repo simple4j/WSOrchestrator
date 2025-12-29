@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.simple4j</groupId>
 	<artifactId>WSOrchestrator</artifactId>
-	<version>25.12.22.1-SNAPSHOT</version>
+	<version>25.12.29.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>WSOrchestrator</name>
 	<url>https://github.com/simple4j/WSOrchestrator</url>

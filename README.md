@@ -11,7 +11,7 @@ Peer steps in a flow are executed in sequence and the peer flows are executed in
 A flow can have series of steps and sub-flows. They are executed in the natural ordering of their names.
 
 <ul>
-Based on natural ordering,
+For example, based on natural ordering,
 <ul>
 	if there are sequence of steps,
 	followed by sequence of sub-flows,

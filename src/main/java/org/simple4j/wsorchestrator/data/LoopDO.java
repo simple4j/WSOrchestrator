@@ -4,6 +4,10 @@ import java.io.File;
 
 import org.simple4j.wsorchestrator.util.ConfigLoader;
 
+/**
+ * This will hold the data of a loop. This does not represent the iterations in the loop.
+ * Even though the model is LoopsTep, the LoopDO is extention of ExecutionFlowDO as this DO is not a leaf node.
+ */
 public class LoopDO extends ExecutionFlowDO
 {
 	private File inputFile=null;

@@ -1,9 +1,11 @@
 package org.simple4j.wsorchestrator.data;
 
-import java.io.File;
-
 import org.simple4j.wsorchestrator.exception.SystemException;
 
+/**
+ * This will hold the data of a loop iteration.
+ * This will always be the child DO of LoopDO and parent of an ExecutionFlowDO representing the body of the loop.
+ */
 public class LoopIterationDO extends ExecutionFlowDO
 {
 	

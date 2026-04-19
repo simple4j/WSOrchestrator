@@ -15,6 +15,9 @@ import org.simple4j.wsorchestrator.exception.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Concrete implementation of ExecutionStep that encapsulates the logic to execute loop.
+ */
 public class LoopStep extends ExecutionStep
 {
 

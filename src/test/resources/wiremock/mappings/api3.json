@@ -1,11 +1,11 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/system1/api1.json.*"
+        "urlPattern": "/system1/api3.json.*"
     },
     "response": {
         "status": 200,
-		"bodyFileName": "api1body.json",
+		"bodyFileName": "api3body.json",
 	    "headers": {
 	        "Content-Type": "text/plain"
 	    },

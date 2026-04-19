@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.mvel2.MVEL;
 import org.simple4j.wsorchestrator.exception.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,4 +93,53 @@ public class ValueRetriever
 		return null;
 	}
 
+	public boolean canExecute()
+	{
+		boolean ret = true;
+		if(this.variables.containsKey("EXECUTE_IF"))
+		{
+			String executeIfExpression = ""+this.variables.get("EXECUTE_IF");
+
+            Object executeIfExpressionResult;
+			try
+			{
+				logger.info("executeIfExpression : {}", executeIfExpression);
+				executeIfExpressionResult = MVEL.eval(executeIfExpression, this.variables);
+				logger.info("executeIfExpressionResult : {}", executeIfExpressionResult);
+			} catch (Throwable e)
+    		{
+				logger.error("Error while evaluating EXECUTE_IF: {} in : {}", executeIfExpression, this, e);
+	            throw new RuntimeException(e);
+			}
+            if(executeIfExpressionResult instanceof Boolean)
+            {
+                if(!((Boolean)executeIfExpressionResult))
+                {
+                   ret = false;
+                   this.variables.put("EXECUTE_IF", false);
+                }
+                else
+                {
+                    this.variables.put("EXECUTE_IF", true);
+                }
+            }
+            else
+            {
+                logger.info("Execute if expression "+executeIfExpression+" return non-boolean value "+ executeIfExpressionResult + " of type "+executeIfExpressionResult.getClass());
+                ret = false;
+                this.variables.put("EXECUTE_IF", false);
+            }
+		}
+		return ret;
+	}
+
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(super.toString()).append(" [variables=").append(variables).append("]");
+		return builder.toString();
+	}
+	
+	
 }

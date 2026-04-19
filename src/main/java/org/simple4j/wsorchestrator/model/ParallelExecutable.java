@@ -2,6 +2,7 @@ package org.simple4j.wsorchestrator.model;
 
 import java.lang.invoke.MethodHandles;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,6 +12,7 @@ import org.simple4j.wsorchestrator.data.ExecutionDO;
 import org.simple4j.wsorchestrator.data.ExecutionFlowDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 /**
  * This class encapsulates the logic for parallel execution of sibling execution flows.
@@ -45,10 +47,11 @@ public class ParallelExecutable implements Executable
 
 	public void execute(ExecutionDO executionDO, ExecutionFlowDO parent)
 	{
+		Map<String, String> loggerContextMap = MDC.getCopyOfContextMap();
 		LinkedList<Future<Void>> futures = new LinkedList<Future<Void>>();
 		for(int i = 0 ; i < this.flows.size() ; i++)
 		{
-			Future<Void> future = this.executorService.submit(new ExecutionFlowExecutor(executionDO, parent, this.flows.get(i)));
+			Future<Void> future = this.executorService.submit(new ExecutionFlowExecutor(executionDO, parent, this.flows.get(i), loggerContextMap));
 			futures.add(future);
 		}
 

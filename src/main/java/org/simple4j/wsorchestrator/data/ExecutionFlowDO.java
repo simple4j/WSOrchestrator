@@ -18,33 +18,43 @@ public class ExecutionFlowDO extends ValueRetriever
 
 	private ExecutionDO executionDO = null;
 	private ExecutionFlowDO parent = null;
-	private String name = null;
+	protected String name = null;
 	
 	public ExecutionFlowDO(ExecutionDO executionDO, ExecutionFlowDO parent, File flowVariablesFile)
 	{
 		logger.info("Entering ExecutionFlowDO {} {} {}", executionDO, parent, flowVariablesFile);
-		this.executionDO = executionDO;
-		this.parent = parent;
 		this.name = flowVariablesFile.getParentFile().getName();
-		if(this.parent != null)
-		{
-			this.parent.variables.put(name, this);
-		}
 		if(flowVariablesFile.exists())
 		{
 	    	variables = ConfigLoader.loadExecutionOrFlowVariables(flowVariablesFile , variables, "FLOW:");
 		}
+		init(executionDO, parent);
 	}
 	
-	public boolean canExecute()
+	protected ExecutionFlowDO(ExecutionDO executionDO, ExecutionFlowDO parent)
 	{
-		boolean ret = true;
-		if(this.variables.containsKey("EXECUTE_IF"))
-		{
-			return (boolean) this.variables.get("EXECUTE_IF");
-		}
-		return ret;
+		init(executionDO, parent);
 	}
+
+	private void init(ExecutionDO executionDO, ExecutionFlowDO parent)
+	{
+		this.executionDO = executionDO;
+		this.parent = parent;
+		if(this.parent != null)
+		{
+			this.parent.variables.put(name, this);
+		}
+	}
+	
+//	public boolean canExecute()
+//	{
+//		boolean ret = true;
+//		if(this.variables.containsKey("EXECUTE_IF"))
+//		{
+//			return (boolean) this.variables.get("EXECUTE_IF");
+//		}
+//		return ret;
+//	}
 	
 	@Override
 	public Object getVariableValue(String variableName)
@@ -73,7 +83,7 @@ public class ExecutionFlowDO extends ValueRetriever
 		StringBuilder builder = new StringBuilder();
 		builder.append(super.toString()).append(" [");
 		builder.append("name=").append(name);
-		builder.append(", variables=").append(variables);
+//		builder.append(", variables=").append(variables);
 		if(parent == null)
 			builder.append(", executionDO=").append(executionDO);
 		builder.append("]");

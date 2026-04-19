@@ -42,7 +42,7 @@ public abstract class ExecutionStep implements Executable
 	/**
 	 * Abstract method which will have the logic to execute the execution step
 	 */
-	public abstract void execute(ExecutionDO execution, ExecutionFlowDO parent);
+	public abstract void execute(ExecutionDO executionDO, ExecutionFlowDO parentExecutionFlowDO);
 
 	/**
 	 * Factory method to encapsulate the logic of identifying the specific sub-type of ExecutionStep.
@@ -57,6 +57,8 @@ public abstract class ExecutionStep implements Executable
 		ExecutionStep ret = null;
 		if(inputFile.getName().endsWith("-ws-input.properties"))
 			ret = new WSExecutionStep(inputFile);
+		if(inputFile.getName().endsWith("-loop-input.properties"))
+			ret = new LoopStep(inputFile);
 		logger.info("Exiting getInstance {}", ret);
 		return ret ;
 	}

@@ -1,1 +1,1 @@
-{"STATUS":"SUCCESS","param1":"{{request.query.param1}}"}
+{"STATUS":"SUCCESS","param1":"{{request.query.param1}}","someArray":["a", "b", "c"]}

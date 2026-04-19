@@ -69,45 +69,45 @@ public class ExecutionStepDO extends ValueRetriever
 		return this.executionDO.getVariableValue(variableName);
 	}
 	
-	public boolean canExecute()
-	{
-		boolean ret = true;
-		if(this.variables.containsKey("EXECUTE_IF"))
-		{
-			String executeIfExpression = ""+this.variables.get("EXECUTE_IF");
-
-            Object executeIfExpressionResult;
-			try
-			{
-				logger.info("executeIfExpression : {}", executeIfExpression);
-				executeIfExpressionResult = MVEL.eval(executeIfExpression, this.variables);
-				logger.info("executeIfExpressionResult : {}", executeIfExpressionResult);
-			} catch (Throwable e)
-    		{
-				logger.error("Error while evaluating EXECUTE_IF: {} in step: {}", executeIfExpression, this.name, e);
-	            throw new RuntimeException(e);
-			}
-            if(executeIfExpressionResult instanceof Boolean)
-            {
-                if(!((Boolean)executeIfExpressionResult))
-                {
-                   ret = false;
-                   this.variables.put("EXECUTE_IF", false);
-                }
-                else
-                {
-                    this.variables.put("EXECUTE_IF", true);
-                }
-            }
-            else
-            {
-                logger.info("Execute if expression "+executeIfExpression+" return non-boolean value "+ executeIfExpressionResult + " of type "+executeIfExpressionResult.getClass());
-                ret = false;
-                this.variables.put("EXECUTE_IF", false);
-            }
-		}
-		return ret;
-	}
+//	public boolean canExecute()
+//	{
+//		boolean ret = true;
+//		if(this.variables.containsKey("EXECUTE_IF"))
+//		{
+//			String executeIfExpression = ""+this.variables.get("EXECUTE_IF");
+//
+//            Object executeIfExpressionResult;
+//			try
+//			{
+//				logger.info("executeIfExpression : {}", executeIfExpression);
+//				executeIfExpressionResult = MVEL.eval(executeIfExpression, this.variables);
+//				logger.info("executeIfExpressionResult : {}", executeIfExpressionResult);
+//			} catch (Throwable e)
+//    		{
+//				logger.error("Error while evaluating EXECUTE_IF: {} in step: {}", executeIfExpression, this.name, e);
+//	            throw new RuntimeException(e);
+//			}
+//            if(executeIfExpressionResult instanceof Boolean)
+//            {
+//                if(!((Boolean)executeIfExpressionResult))
+//                {
+//                   ret = false;
+//                   this.variables.put("EXECUTE_IF", false);
+//                }
+//                else
+//                {
+//                    this.variables.put("EXECUTE_IF", true);
+//                }
+//            }
+//            else
+//            {
+//                logger.info("Execute if expression "+executeIfExpression+" return non-boolean value "+ executeIfExpressionResult + " of type "+executeIfExpressionResult.getClass());
+//                ret = false;
+//                this.variables.put("EXECUTE_IF", false);
+//            }
+//		}
+//		return ret;
+//	}
 
 	public void processStepExecutionResponse(Map<String, Object> response)
 	{
@@ -124,19 +124,27 @@ public class ExecutionStepDO extends ValueRetriever
 	        for (Entry<Object, Object> entry : outputProperties.entrySet())
 	        {
 	        	CollectionsPathRetreiver cpr = new CollectionsPathRetreiver();
-	        	logger.info("fetching property|{}| from |{}|",""+entry.getValue(), response);
-	            List nestedProperty = cpr.getNestedProperty(response, ""+entry.getValue());
+	        	String propertyPath = ""+entry.getValue();
+				logger.info("fetching property|{}| from |{}|",propertyPath, response);
+	        	
+				boolean returnList=false;
+				if(propertyPath.startsWith("[") && propertyPath.endsWith("]"))
+				{
+					returnList = true;
+					propertyPath = propertyPath.substring(1, propertyPath.length()-2);
+				}
+	            List nestedProperty = cpr.getNestedProperty(response, propertyPath);
 	            Object value = nestedProperty;
 	            if(nestedProperty.size() == 0)
 	            {
 	            	continue;
 	            }
-	            if(nestedProperty.size() == 1)
+	            if(nestedProperty.size() == 1 && !returnList)
 	            {
 	            	value = nestedProperty.get(0);
 	            }
-            	logger.info("setting key to intrepreter: {} value: {}", entry.getKey(), value);
-				this.variables.put(""+entry.getKey(), ""+value);
+            	logger.info("setting key as step variable: {} value: {}", entry.getKey(), value);
+				this.variables.put(""+entry.getKey(), value);
 	        }
 	        if(assertExpression != null)
 	        {
@@ -178,7 +186,8 @@ public class ExecutionStepDO extends ValueRetriever
 //			builder.append(" [executionDO=").append(executionDO);
 		builder.append("[inputFile=").append(inputFile)
 		.append(", outputFile=").append(outputFile).append(", name=")
-		.append(name).append(", shortName=").append(shortName).append(", variables=").append(variables)
+		.append(name).append(", shortName=").append(shortName)
+//		.append(", variables=").append(variables)
 		.append("]");
 		return builder.toString();
 	}

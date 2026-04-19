@@ -40,7 +40,7 @@ public class MainTest
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
 	{
-		wm1 = new WireMockServer(WireMockConfiguration.options().bindAddress("localhost").port(2001).withRootDirectory(MainTest.class.getResource("/wiremock").getPath()));
+		wm1 = new WireMockServer(WireMockConfiguration.options().gzipDisabled(true).bindAddress("localhost").port(2001).withRootDirectory(MainTest.class.getResource("/wiremock").getPath()));
 		wm1.start();
 		flowsDir = new File(MainTest.class.getResource("/flowsRootDirecory").getPath());
 		ac = new ClassPathXmlApplicationContext("/connectors/wiremock/appContext.xml");
@@ -196,5 +196,16 @@ public class MainTest
 		Assert.assertTrue("./04-subflow/EXECUTE_IF is not true", (boolean) flowTrueExecuteIf);
 		Assert.assertNotNull("./04-subflow/010-step-ws/param12 is null", flowTrueExecuteIfparam12);
 		
+	}
+
+	/**
+	 * This test case is to test loop feature
+	 * 
+	 */
+	@Test
+	public void testLoopFlow()
+	{
+		ExecutionFlowDO response = orch.execute("loopFlow", null);
+		System.out.println(response);
 	}
 }

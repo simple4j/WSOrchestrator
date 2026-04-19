@@ -66,7 +66,7 @@ public class Orchestrator
 		if(executionFlow == null)
 			throw new SystemException("FLOW_NOT_FOUND", "Flow not found:"+flowDirectory);
 		
-		ExecutionDO executionDO = new ExecutionDO(this.flowsRootDirectory, this.connectorsApplicationContext, executionParameters);
+		ExecutionDO executionDO = new ExecutionDO(this.flowsRootDirectory, this.connectorsApplicationContext, executionParameters, flowDirectory, Map.copyOf(this.executioFlows));
 		ret = executionFlow.execute(executionDO);
 		return ret ;
 	}
